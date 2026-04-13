@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+
+# Database (if using SQLite or local files)
+*.sqlite
+*.sqlite3
+data/
+
+# Misc
+.cache/
+.temp/
+*.tmp
+
+# Secrets and credentials
+firebase-service-account.json
+*service-account*.json
+*secrets*.js
+*.key
+*.pem

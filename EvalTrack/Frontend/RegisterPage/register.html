@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack - Register</title>
+  <link rel="icon" type="image/png" href="../icon&logo/logo.png">
+  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  
+  <div class="login-container">
+    <div class="login-card" style="height: auto; min-height: 700px; max-height: none;">
+      <!-- Left Side (Branding) -->
+      <div class="left-side">
+        <img src="../icon&logo/logo.png" alt="EvalTrack Logo" class="login-logo">
+        <h1>Jose Maria College</h1>
+        <p>Foundation, Inc.</p>
+      </div>
+
+      <!-- Right Side (Form) -->
+      <div class="right-side" style="max-height: 90vh; overflow-y: auto;">
+        <h1>Complete Student Registration</h1>
+        <p>Sign in with Google, then verify your student identity to access EvalTrack.</p>
+        
+        <div id="googlePrompt" style="margin-bottom: 1.5rem;">
+          <button type="button" class="google-btn" onclick="signInWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
+          </button>
+          <p style="color:#a78bfa; font-size:0.92rem; margin-top:12px;">If you already signed in, your Google profile will prefill this form.</p>
+        </div>
+
+        <div id="registrationSection" style="display:none;">
+          <div id="error-message" class="error-message" style="display: none;">
+            <i class="fa fa-exclamation-triangle"></i>
+            <span id="error-text"></span>
+          </div>
+          
+          <form id="registerForm" class="login-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="id">Student ID</label>
+                <div class="input-wrapper">
+                  <i class="fa fa-id-card input-icon"></i>
+                  <input type="text" id="id" name="id" placeholder="Enter your student ID" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <div class="input-wrapper">
+                  <i class="fa fa-user input-icon"></i>
+                  <input type="text" id="name" name="name" placeholder="Student full name" readonly>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <div class="input-wrapper">
+                <i class="fa fa-envelope input-icon"></i>
+                <input type="email" id="email" name="email" placeholder="Google email address" readonly>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="program">Program</label>
+                <div class="input-wrapper">
+                  <i class="fa fa-graduation-cap input-icon"></i>
+                  <select id="program" name="program" required>
+                    <option value="">Select your program</option>
+                    <option value="BSIT">BSIT</option>
+                    <option value="BSEMC">BSEMC</option>
+                    <option value="BSBA">BSBA</option>
+                    <option value="BSED">BSED</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="yearLevel">Year Level</label>
+                <div class="input-wrapper">
+                  <i class="fa fa-layer-group input-icon"></i>
+                  <select id="yearLevel" name="yearLevel" required>
+                    <option value="">Select year level</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactNumber">Contact Number (optional)</label>
+              <div class="input-wrapper">
+                <i class="fa fa-phone input-icon"></i>
+                <input type="text" id="contactNumber" name="contactNumber" placeholder="Enter mobile number">
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn">
+              <i class="fa fa-user-plus"></i>
+              Complete Registration
+            </button>
+          </form>
+        </div>
+
+        <div class="login-links" style="margin-top: 24px; text-align:center;">
+          <a href="../LoginPage/login.html" class="register-link">Back to Login</a>
+        </div>
+      </div> <!-- right-side -->
+    </div> <!-- login-card -->
+  </div> <!-- login-container -->
+  
+  <div id="toast-container"></div>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script>
+    // Firebase Auth mode: replace values with your EvalTrack Firebase project settings
+    window.USE_FIREBASE_AUTH = true;
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyA90M1tOW7qIjy3-odQaSyR4a6xcTlPObU",
+      authDomain: "evaltrack-system.firebaseapp.com",
+      projectId: "evaltrack-system",
+      storageBucket: "evaltrack-system.firebasestorage.app",
+      messagingSenderId: "407757043757",
+      appId: "1:407757043757:web:e8aef13e040c2777ba20a4",
+      measurementId: "G-MC0SLTSPLF"
+    };
+  </script>
+  <script src="../app.js"></script>
+  <script>
+    function showError(message) {
+      const errorEl = document.getElementById('error-message');
+      const errorText = document.getElementById('error-text');
+      errorText.textContent = message;
+      errorEl.style.display = 'flex';
+    }
+
+    function hideError() {
+      const errorEl = document.getElementById('error-message');
+      if (errorEl) errorEl.style.display = 'none';
+    }
+
+    function showRegistrationSection(userData) {
+      document.getElementById('googlePrompt').style.display = 'none';
+      document.getElementById('registrationSection').style.display = 'block';
+      document.getElementById('name').value = userData.name || '';
+      document.getElementById('email').value = userData.email || '';
+      document.getElementById('id').value = userData.id || '';
+      if (userData.email) {
+        document.getElementById('email').readOnly = true;
+      }
+      if (userData.name) {
+        document.getElementById('name').readOnly = true;
+      }
+    }
+
+    async function signInWithGoogle() {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email');
+        provider.addScope('profile');
+
+        const result = await firebase.auth().signInWithPopup(provider);
+        const user = result.user;
+        if (!user || !user.email) {
+          throw new Error('Google login did not return an email address.');
+        }
+
+        const API_BASE_URL = 'https://evaltrack-system.onrender.com/api';
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, isGoogleLogin: true })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+          sessionStorage.setItem('token', data.token || '');
+          showToast('Welcome back! Redirecting to student portal...', 'success');
+          setTimeout(() => window.location.href = '../StudentPage/student.html', 800);
+          return;
+        }
+
+        sessionStorage.setItem('tempGoogleUser', JSON.stringify({
+          email: user.email,
+          name: user.displayName || '',
+          uid: user.uid,
+          photoURL: user.photoURL || ''
+        }));
+        showRegistrationSection({ email: user.email, name: user.displayName || '' });
+      } catch (error) {
+        console.error('Google registration error:', error);
+        showError(error.message || 'Google sign-in failed. Please try again.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const storedUser = sessionStorage.getItem('tempGoogleUser');
+      if (storedUser) {
+        const googleUser = JSON.parse(storedUser);
+        showRegistrationSection(googleUser);
+      }
+
+      document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError();
+
+        const tempGoogleUser = JSON.parse(sessionStorage.getItem('tempGoogleUser') || '{}');
+        if (!tempGoogleUser.email) {
+          showError('Please sign in with Google first to continue.');
+          return;
+        }
+
+        const formData = {
+          id: document.getElementById('id').value.trim(),
+          name: document.getElementById('name').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          password: tempGoogleUser.uid,
+          role: 'student',
+          program: document.getElementById('program').value,
+          student_type: 'regular',
+          year_level: document.getElementById('yearLevel').value,
+          contact_number: document.getElementById('contactNumber').value.trim()
+        };
+
+        if (!formData.id || !formData.name || !formData.email || !formData.program || !formData.year_level) {
+          showError('Please fill in all required fields.');
+          return;
+        }
+
+        const submitBtn = document.querySelector('.login-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+        submitBtn.disabled = true;
+
+        try {
+          const result = await register(formData);
+          if (result.success) {
+            sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+            sessionStorage.removeItem('tempGoogleUser');
+            showToast('Registration complete. Redirecting to student portal...', 'success');
+            setTimeout(() => window.location.href = '../StudentPage/student.html', 1000);
+          } else {
+            showError(result.message || 'Registration failed.');
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          showError('Connection failed. Please try again.');
+        } finally {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      });
+
+      initParticles();
+    });
+  </script>
+</body>
+</html>

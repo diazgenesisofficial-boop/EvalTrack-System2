@@ -1,0 +1,100 @@
+/* Glass + Purple Theme for EvalTrack Frontend (non-destructive)
+   Drop this file into EvalTrack/Frontend and link it AFTER existing CSS to override visuals.
+   Design-only: does not change HTML structure or JS behavior.
+*/
+
+:root{
+  --glass-bg: rgba(255,255,255,0.035);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-highlight: rgba(255,255,255,0.08);
+  --accent-1: #9b5cff; /* vivid purple */
+  --accent-2: #7c3aed; /* deep purple */
+  --muted: #d8cfff;
+  --text-light: #efe9ff;
+  --card-shadow: 0 24px 60px rgba(15,6,30,0.45);
+}
+
+/* Page background: layered gradients + soft vignette */
+html,body{
+  background:
+    radial-gradient(800px 500px at 8% 12%, rgba(155,92,255,0.06), transparent 8%),
+    radial-gradient(900px 500px at 92% 86%, rgba(124,58,237,0.05), transparent 10%),
+    linear-gradient(180deg,#0b0620 0%, #140a2a 40%, #1b0f33 100%);
+  color: var(--text-light);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Slight animated sheen on background (low-cost, optional) */
+@media (prefers-reduced-motion: no-preference){
+  body::after{
+    content: "";
+    pointer-events:none;
+    position:fixed; inset:0; z-index:0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00) 30%, rgba(255,255,255,0.02));
+    transform: translateZ(0);
+    mix-blend-mode: overlay;
+    animation: sheen 14s linear infinite;
+    opacity: 0.9;
+  }
+  @keyframes sheen{ from{ transform: translateX(-30%); } to{ transform: translateX(30%); } }
+}
+
+/* Ensure content stacks above background overlay */
+.login-container, .login-card, .left-side, .right-side, .card, .sidebar, header, main, .container{ position:relative; z-index:2; }
+
+/* Glass panels: gentle translucency, soft border, inner reflection */
+.login-card, .card, .sidebar, .right-side, .left-side{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* Highlight top-left gloss band for 'reflection' */
+.login-card::before, .card::before, .sidebar::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 0; right: 0;
+  height: 18%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Accent buttons */
+.btn, .login-btn, .google-btn, .cta{
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: white; border: none; border-radius: 12px; padding: 10px 16px;
+  box-shadow: 0 10px 30px rgba(124,58,237,0.18);
+}
+
+/* Subtle outline / focus ring that's purple-tinted */
+:focus{ outline: none; box-shadow: 0 0 0 4px rgba(155,92,255,0.12); }
+
+/* Muted text and badges */
+.muted, .g-muted { color: var(--muted); }
+
+/* Cards hover: lift and soft glow */
+.card:hover, .login-card:hover{ transform: translateY(-8px); transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s; box-shadow: 0 30px 80px rgba(15,6,30,0.55); }
+
+/* Profile image ring (if present) */
+.profile-img{ border-radius: 50%; box-shadow: 0 10px 36px rgba(124,58,237,0.14), 0 0 36px rgba(155,92,255,0.08); border: 2px solid rgba(255,255,255,0.06); }
+
+/* Sidebar / topbar tweaks: darker glass to increase contrast */
+.sidebar, .topbar{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left: 1px solid rgba(255,255,255,0.03); }
+
+/* Modal windows: deeper glass + inner glow */
+.modal-content{ background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.06); box-shadow: 0 30px 80px rgba(15,6,30,0.6); }
+
+/* Utility: glass-tint helper class to apply on elements */
+.glass-tint { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); }
+
+/* Make sure small text remains readable */
+small, .small { color: var(--muted); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; }
+  .card:hover, .login-card:hover { transform: none; }
+}

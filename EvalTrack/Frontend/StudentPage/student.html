@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack — Student Portal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="student.css">
+  <link rel="icon" type="image/png" href="../icon&logo/logo.png">
+</head>
+
+<body>
+  <canvas id="particles"></canvas>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img class="sidebar-logo-img" src="../icon&logo/logo.png" alt="JMC">
+      <div>
+        <div class="sidebar-brand">EvalTrack</div>
+        <div class="sidebar-brand-sub">Student Portal</div>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Academic</div>
+      <button class="nav-link active" data-sec="dashboard">
+        <span class="ni"><i class="fa fa-house"></i></span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-link" data-sec="grades">
+        <span class="ni"><i class="fa fa-chart-line"></i></span>
+        <span>My Grades</span>
+      </button>
+      <button class="nav-link" data-sec="enrollment">
+        <span class="ni"><i class="fa fa-graduation-cap"></i></span>
+        <span>Enrollment</span>
+      </button>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Tools</div>
+      <button class="nav-link" data-sec="messages">
+        <span class="ni"><i class="fa fa-comments"></i></span>
+        <span>Messages</span>
+        <span class="nbadge" id="msg-badge" style="display:none">•</span>
+      </button>
+      <button class="nav-link" data-sec="profile">
+        <span class="ni"><i class="fa fa-user"></i></span>
+        <span>Profile</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user-card">
+        <div class="user-avatar" id="user-avatar">S</div>
+        <div style="overflow:hidden;flex:1;">
+          <div class="user-name" id="sidebar-name">Loading...</div>
+          <div class="user-role">Student</div>
+        </div>
+      </div>
+      <button class="btn-signout" onclick="logout()">
+        <i class="fa fa-right-from-bracket"></i> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ TOPBAR ══ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mob-toggle" id="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <i class="fa fa-bars"></i>
+      </button>
+      <div class="topbar-breadcrumb">
+        <span class="topbar-crumb"><i class="fa fa-school"></i> JMC</span>
+        <i class="fa fa-chevron-right" style="font-size:9px;color:var(--g300);"></i>
+        <span class="topbar-page" id="topbar-title">Dashboard</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-pill">
+        <span class="status-dot"></span>
+        <span id="tb-user-name">Loading</span>
+      </div>
+      <div class="tb-time" id="tb-clock"></div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main-wrap">
+
+    <!-- ── 1. DASHBOARD ── -->
+    <section id="dashboard" class="section active">
+      <div class="ph">
+        <div>
+          <div class="ph-title">Student Dashboard</div>
+          <div class="ph-sub">Welcome back! Here's your academic overview</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon si-blue"><i class="fa fa-book"></i></div>
+          <div class="stat-content">
+            <div class="stat-value" id="total-subjects">0</div>
+            <div class="stat-label">Current Subjects</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-green"><i class="fa fa-chart-line"></i></div>
+          <div class="stat-content">
+            <div class="stat-value" id="average-grade">0%</div>
+            <div class="stat-label">Average Grade</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-purple"><i class="fa fa-trophy"></i></div>
+          <div class="stat-content">
+            <div class="stat-value" id="passing-rate">0%</div>
+            <div class="stat-label">Pass Rate</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-amber"><i class="fa fa-calendar"></i></div>
+          <div class="stat-content">
+            <div class="stat-value" id="current-semester">-</div>
+            <div class="stat-label">Current Semester</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-bell"></i> Recent Announcements</div>
+            <div class="card-sub">Latest updates and notifications</div>
+          </div>
+        </div>
+        <div id="announcements-list">
+          <div style="text-align:center;padding:3rem;color:var(--g500);">
+            <i class="fa fa-bullhorn fa-2x"></i>
+            <p style="margin-top:1rem;">No announcements at this time</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. MY GRADES ── -->
+    <section id="grades" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">My Grades</div>
+          <div class="ph-sub">View your academic performance and grades</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-chart-bar"></i> Grade Report</div>
+            <div class="card-sub" id="grades-summary">Loading grades...</div>
+          </div>
+          <div class="grade-filters">
+            <select id="semester-filter" class="form-control">
+              <option value="">All Semesters</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="grades-table">
+            <thead>
+              <tr>
+                <th>Subject Code</th>
+                <th>Subject Name</th>
+                <th>Semester</th>
+                <th>Grade</th>
+                <th>Status</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="grades-tbody">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:2rem;color:var(--g500);">
+                  <i class="fa fa-spinner fa-spin"></i> Loading grades...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. ENROLLMENT ── -->
+    <section id="enrollment" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">Enrollment Status</div>
+          <div class="ph-sub">Manage your enrollment and academic records</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-graduation-cap"></i> Current Enrollment</div>
+            <div class="card-sub">Your active academic enrollment details</div>
+          </div>
+        </div>
+        <div id="enrollment-details">
+          <div style="text-align:center;padding:3rem;color:var(--g500);">
+            <i class="fa fa-user-graduate fa-2x"></i>
+            <p style="margin-top:1rem;">Loading enrollment information...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-book-open"></i> Prospectus</div>
+            <div class="card-sub">Your program curriculum and subjects</div>
+          </div>
+        </div>
+        <div class="enroll-tabs">
+          <button class="enroll-tab active" data-year="1">1st Year</button>
+          <button class="enroll-tab" data-year="2">2nd Year</button>
+          <button class="enroll-tab" data-year="3">3rd Year</button>
+          <button class="enroll-tab" data-year="4">4th Year</button>
+        </div>
+        <div id="prospectus-content">
+          <div style="text-align:center;padding:3rem;color:var(--g500);">
+            <i class="fa fa-book fa-2x"></i>
+            <p style="margin-top:1rem;">Loading prospectus...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. MESSAGES ── -->
+    <section id="messages" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">Messages</div>
+          <div class="ph-sub">Communicate with instructors and administrators</div>
+        </div>
+      </div>
+      <div id="advanced-chat-container"></div>
+    </section>
+
+    <!-- ── 5. PROFILE ── -->
+    <section id="profile" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">My Profile</div>
+          <div class="ph-sub">Manage your personal information and account settings</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-user"></i> Personal Information</div>
+            <div class="card-sub">Your academic and personal details</div>
+          </div>
+        </div>
+        <div id="profile-info">
+          <div style="text-align:center;padding:3rem;color:var(--g500);">
+            <i class="fa fa-user-circle fa-2x"></i>
+            <p style="margin-top:1rem;">Loading profile information...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-cog"></i> Account Settings</div>
+            <div class="card-sub">Manage your account preferences</div>
+          </div>
+        </div>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-label">Change Password</div>
+            <button class="btn btn-primary" onclick="showChangePassword()">
+              <i class="fa fa-key"></i> Update Password
+            </button>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">Email Notifications</div>
+            <label class="switch">
+              <input type="checkbox" id="email-notifications" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast-container"></div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="change-password-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button class="modal-close" onclick="closeChangePassword()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="change-password-form">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="current-password" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="new-password" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirm-password" class="form-control" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeChangePassword()">Cancel</button>
+        <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../app.js"></script>
+  <script>
+    /* ═══════ Auth & Storage Helper ═══════ */
+    function getAuthToken() {
+      return localStorage.getItem('authToken') || localStorage.getItem('token') || sessionStorage.getItem('authToken') || sessionStorage.getItem('token') || null;
+    }
+
+    function getCurrentUser() {
+      const userStr = localStorage.getItem('currentUser') || localStorage.getItem('user') || sessionStorage.getItem('user') || sessionStorage.getItem('currentUser');
+      if (!userStr) return null;
+      try { return JSON.parse(userStr); } catch (e) { return null; }
+    }
+
+    async function authFetch(url, options = {}) {
+      const token = getAuthToken();
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      
+      const response = await fetch(url, { ...options, headers });
+      if (response.status === 401) {
+        localStorage.clear(); sessionStorage.clear();
+        window.location.href = '../LoginPage/login.html';
+        throw new Error('Unauthorized');
+      }
+      return response;
+    }
+
+    function logout() {
+      localStorage.clear(); sessionStorage.clear();
+      window.location.href = '../LoginPage/login.html';
+    }
+
+    function checkAuth(allowedRoles) {
+      const user = getCurrentUser();
+      if (!user) { window.location.href = '../LoginPage/login.html'; return null; }
+      
+      const userRole = (user.role || '').toString().toLowerCase().replace(/[\s\-_]/g, '');
+      if (allowedRoles) {
+        const normalizedRoles = allowedRoles.map(r => r.toString().toLowerCase().replace(/[\s\-_]/g, ''));
+        if (!normalizedRoles.includes(userRole)) {
+          window.location.href = '../LoginPage/login.html';
+          return null;
+        }
+      }
+      return user;
+    }
+
+    // Global State
+    let currentUser = null;
+    let studentGrades = [];
+
+    const PAGE_TITLES = {
+      dashboard: 'Dashboard',
+      grades: 'My Grades',
+      enrollment: 'Enrollment',
+      messages: 'Messages',
+      profile: 'Profile'
+    };
+
+    // Clock
+    function startClock() {
+      function tick() {
+        const now = new Date();
+        document.getElementById('tb-clock').textContent = now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-link[data-sec]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sec = btn.dataset.sec;
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(sec)?.classList.add('active');
+        document.getElementById('topbar-title').textContent = PAGE_TITLES[sec] || sec;
+        if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+
+        // Load section-specific data
+        if (sec === 'dashboard') loadStudentData();
+        if (sec === 'grades') loadGrades();
+        if (sec === 'enrollment') loadEnrollment();
+        if (sec === 'profile') loadProfile();
+      });
+    });
+
+    // Load Student Data (Dashboard)
+    async function loadStudentData() {
+      try {
+        if (!currentUser) return;
+        
+        // 1. Load standing
+        const standingRes = await authFetch(`http://localhost:3000/api/standing/student/${currentUser.id}`);
+        const standingData = await standingRes.json();
+        
+        if (standingData.standing === 'Graduated') {
+          showToast('Congratulations! You have graduated!', 'success');
+          // Add a special celebration UI if needed
+        }
+        
+        // 2. Load grades for stats
+        const response = await authFetch('http://localhost:3000/api/evaluations');
+        const grades = await response.json();
+        
+        if (Array.isArray(grades)) {
+          studentGrades = grades;
+          updateDashboardStats(grades);
+          
+          // Show recent grades in dashboard table
+          const tbody = document.getElementById('recent-grades-tbody');
+          if (tbody) {
+            tbody.innerHTML = '';
+            grades.slice(0, 5).forEach(grade => {
+              const tr = document.createElement('tr');
+              const finalGrade = parseFloat(grade.final_grade || grade.grade || 0);
+              const isPassing = finalGrade >= 75;
+              tr.innerHTML = `
+                <td>${grade.course_code}</td>
+                <td>${grade.term || 'N/A'}</td>
+                <td><strong style="color:${isPassing ? 'var(--green)' : 'var(--red)'}">${finalGrade}</strong></td>
+                <td><span class="badge ${isPassing ? 'bg-green' : 'bg-red'}">${isPassing ? 'Passed' : 'Failed'}</span></td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+        }
+        
+        // 3. Load enrollment for dashboard
+        const enrollRes = await authFetch(`http://localhost:3000/api/enrollment/current/${currentUser.id}`);
+        const enrollment = await enrollRes.json();
+        
+        if (Array.isArray(enrollment) && enrollment.length > 0) {
+          document.getElementById('current-semester').textContent = enrollment[0].term || 'Current';
+        } else if (standingData.standing === 'Graduated') {
+          document.getElementById('current-semester').textContent = 'Graduated';
+        }
+      } catch (error) {
+        console.error('Error loading student data:', error);
+      }
+    }
+
+    // Load grades
+    async function loadGrades() {
+      try {
+        const response = await authFetch('http://localhost:3000/api/evaluations');
+        const grades = await response.json();
+        
+        studentGrades = grades;
+        updateGradesDisplay(grades);
+        updateDashboardStats(grades);
+        
+      } catch (error) {
+        console.error('Error loading grades:', error);
+        document.getElementById('grades-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g500);">Failed to load grades</td></tr>';
+      }
+    }
+
+    function updateGradesDisplay(grades) {
+      const tbody = document.getElementById('grades-tbody');
+      const summary = document.getElementById('grades-summary');
+      
+      if (!tbody) return;
+      
+      if (!grades || grades.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g500);">No grades available</td></tr>';
+        if (summary) summary.textContent = 'No grades available';
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      let totalSubjects = 0;
+      let totalGrade = 0;
+      let passedSubjects = 0;
+      
+      grades.forEach(grade => {
+        const row = document.createElement('tr');
+        const finalGrade = parseFloat(grade.final_grade || grade.grade || 0);
+        const isPassing = finalGrade >= 75;
+        
+        row.innerHTML = `
+          <td><strong>${grade.course_code}</strong></td>
+          <td>${grade.course_title || grade.title || 'N/A'}</td>
+          <td>${grade.term || 'N/A'}</td>
+          <td><strong style="color: ${isPassing ? 'var(--green)' : 'var(--red)'}">${finalGrade}</strong></td>
+          <td><span class="badge ${isPassing ? 'bg-green' : 'bg-red'}">${isPassing ? 'Passed' : 'Failed'}</span></td>
+          <td>${grade.remarks || '-'}</td>
+        `;
+        
+        tbody.appendChild(row);
+        
+        totalSubjects++;
+        totalGrade += finalGrade;
+        if (isPassing) passedSubjects++;
+      });
+      
+      const average = totalSubjects > 0 ? (totalGrade / totalSubjects).toFixed(1) : 0;
+      const passRate = totalSubjects > 0 ? ((passedSubjects / totalSubjects) * 100).toFixed(0) : 0;
+      
+      if (summary) summary.textContent = `${totalSubjects} subjects • Average: ${average}% • Pass Rate: ${passRate}%`;
+      
+      // Update dashboard stats
+      const ts = document.getElementById('total-subjects');
+      const ag = document.getElementById('average-grade');
+      const pr = document.getElementById('passing-rate');
+      if (ts) ts.textContent = totalSubjects;
+      if (ag) ag.textContent = average + '%';
+      if (pr) pr.textContent = passRate + '%';
+    }
+
+    // Load enrollment
+    async function loadEnrollment() {
+      try {
+        const response = await authFetch(`http://localhost:3000/api/enrollment/current/${currentUser.id}`);
+        const enrollment = await response.json();
+        
+        updateEnrollmentDisplay(enrollment);
+        loadProspectus();
+        
+      } catch (error) {
+        console.error('Error loading enrollment:', error);
+        document.getElementById('enrollment-details').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--g500);">Failed to load enrollment data</div>';
+      }
+    }
+
+    function updateEnrollmentDisplay(enrollment) {
+      const details = document.getElementById('enrollment-details');
+      if (!details) return;
+      
+      if (!Array.isArray(enrollment) || enrollment.length === 0) {
+        details.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--g500);">No active enrollment for current term.</div>';
+        return;
+      }
+      
+      details.innerHTML = `
+        <div class="enrollment-info">
+          <div class="enrollment-row">
+            <div class="enrollment-label">Student ID:</div>
+            <div class="enrollment-value">${currentUser.id}</div>
+          </div>
+          <div class="enrollment-row">
+            <div class="enrollment-label">Program:</div>
+            <div class="enrollment-value">${currentUser.program || 'BSIT'}</div>
+          </div>
+          <div class="enrollment-row">
+            <div class="enrollment-label">Term:</div>
+            <div class="enrollment-value">${enrollment[0].term || 'Current'}</div>
+          </div>
+          <div class="enrollment-row">
+            <div class="enrollment-label">Status:</div>
+            <div class="enrollment-value"><span class="badge bg-green">Active</span></div>
+          </div>
+          <div style="margin-top:15px;">
+            <strong>Enrolled Subjects:</strong>
+            <ul style="margin-top:10px; padding-left:20px;">
+              ${enrollment.map(e => `<li>${e.course_code} - ${e.title} (${e.units} units)</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      const cs = document.getElementById('current-semester');
+      if (cs) cs.textContent = enrollment[0].term || 'Current';
+    }
+
+    // Load prospectus
+    function loadProspectus() {
+      const prospectus = {
+        1: [
+          { code: 'GE 10', desc: 'Environmental Science' },
+          { code: 'GE 11', desc: 'The Entrepreneurial Mind' },
+          { code: 'IT 101', desc: 'Introduction to Computing' },
+          { code: 'IT 102', desc: 'Computer Programming 1' }
+        ],
+        2: [
+          { code: 'IT 103', desc: 'Computer Programming 2' },
+          { code: 'IT 104', desc: 'Introduction to Human Computer Interaction' },
+          { code: 'IT 105', desc: 'Discrete Mathematics 1' }
+        ],
+        3: [
+          { code: 'IT 201', desc: 'Data Structures and Algorithms' },
+          { code: 'IT 202', desc: 'Networking 1' },
+          { code: 'IT 203', desc: 'Information Management' }
+        ],
+        4: [
+          { code: 'IT 301', desc: 'Advanced Database Systems' },
+          { code: 'IT 302', desc: 'System Integration and Architecture' },
+          { code: 'CAP 101', desc: 'Capstone Project & Research 1' }
+        ]
+      };
+      
+      // Tab switching
+      document.querySelectorAll('.enroll-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.enroll-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          const year = tab.dataset.year;
+          const subjects = prospectus[year] || [];
+          
+          const content = document.getElementById('prospectus-content');
+          if (subjects.length === 0) {
+            content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--g500);">No subjects for this year</div>';
+            return;
+          }
+          
+          content.innerHTML = `
+            <div class="prospectus-grid">
+              ${subjects.map(subject => `
+                <div class="prospectus-item">
+                  <div class="prospectus-code">${subject.code}</div>
+                  <div class="prospectus-desc">${subject.desc}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        });
+      });
+      
+      // Load first year by default
+      const firstTab = document.querySelector('.enroll-tab[data-year="1"]');
+      if (firstTab) firstTab.click();
+    }
+
+    // Load profile
+    async function loadProfile() {
+      const profileInfo = document.getElementById('profile-info');
+      if (!profileInfo) return;
+      
+      if (!currentUser) {
+        profileInfo.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--g500);">Profile data not available</div>';
+        return;
+      }
+      
+      profileInfo.innerHTML = `
+        <div class="profile-grid">
+          <div class="profile-item">
+            <div class="profile-label">Full Name</div>
+            <div class="profile-value">${currentUser.name}</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-label">Student ID</div>
+            <div class="profile-value">${currentUser.id}</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-label">Email</div>
+            <div class="profile-value">${currentUser.email}</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-label">Program</div>
+            <div class="profile-value">${currentUser.program || 'BSIT'}</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-label">Student Type</div>
+            <div class="profile-value">${currentUser.student_type || 'Regular'}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Update dashboard stats
+    function updateDashboardStats(grades) {
+      if (!grades || grades.length === 0) return;
+      
+      let totalGrade = 0;
+      let passedSubjects = 0;
+      
+      grades.forEach(grade => {
+        const finalGrade = parseFloat(grade.final_grade || grade.grade || 0);
+        totalGrade += finalGrade;
+        if (finalGrade >= 75) passedSubjects++;
+      });
+      
+      const average = (totalGrade / grades.length).toFixed(1);
+      const passRate = ((passedSubjects / grades.length) * 100).toFixed(0);
+      
+      const ts = document.getElementById('total-subjects');
+      const ag = document.getElementById('average-grade');
+      const pr = document.getElementById('passing-rate');
+      if (ts) ts.textContent = grades.length;
+      if (ag) ag.textContent = average + '%';
+      if (pr) pr.textContent = passRate + '%';
+    }
+
+    // Change password functions
+    function showChangePassword() {
+      document.getElementById('change-password-modal').style.display = 'flex';
+    }
+
+    function closeChangePassword() {
+      document.getElementById('change-password-modal').style.display = 'none';
+      document.getElementById('change-password-form').reset();
+    }
+
+    async function changePassword() {
+      const newPass = document.getElementById('new-password').value;
+      const confirmPass = document.getElementById('confirm-password').value;
+      
+      if (!newPass || !confirmPass) {
+        showToast('Please fill in all fields', 'warning');
+        return;
+      }
+      
+      if (newPass !== confirmPass) {
+        showToast('New passwords do not match', 'warning');
+        return;
+      }
+      
+      if (newPass.length < 6) {
+        showToast('Password must be at least 6 characters', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await authFetch('http://localhost:3000/api/auth/change-password', {
+          method: 'POST',
+          body: JSON.stringify({
+            id: currentUser.id,
+            new_password: newPass
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast('Password changed successfully!', 'success');
+          closeChangePassword();
+        } else {
+          showToast(result.message || 'Failed to change password', 'error');
+        }
+      } catch (error) {
+        showToast('Connection error. Please try again.', 'error');
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      startClock();
+      currentUser = checkAuth(['student']);
+      if (!currentUser) return;
+
+      document.getElementById('sidebar-name').textContent = currentUser.name;
+      document.getElementById('tb-user-name').textContent = currentUser.name;
+      document.getElementById('user-avatar').textContent = currentUser.name?.charAt(0)?.toUpperCase() || 'S';
+
+      initAdvancedChat('advanced-chat-container', currentUser);
+      loadStudentData();
+    });
+  </script>
+</body>
+
+</html>

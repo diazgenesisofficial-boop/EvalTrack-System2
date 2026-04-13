@@ -1,0 +1,19 @@
+/* Reflection utility: adds a hover sweep and configurable intensity
+   Usage: add class `glass-shine` to the container you want the shine on
+*/
+.glass-shine { position: relative; overflow: hidden; }
+.glass-shine::after{
+  content: "";
+  position: absolute; left:-40%; top:-60%; width:40%; height:220%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.00));
+  transform: rotate(-18deg); transition: transform 800ms cubic-bezier(.2,.9,.2,1), opacity 400ms;
+  pointer-events:none; z-index:2;
+  mix-blend-mode: overlay; opacity:0.95;
+}
+.glass-shine:hover::after{ transform: translateX(260%) rotate(-18deg); opacity:1; }
+
+/* Adjustable variables */
+:root{ --shine-opacity: 0.1; }
+.glass-shine::after{ opacity: var(--shine-opacity); }
+
+@media (prefers-reduced-motion: reduce){ .glass-shine::after{ display:none; } }

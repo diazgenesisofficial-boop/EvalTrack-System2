@@ -1,0 +1,14 @@
+@import "./portal.css";
+
+/* Tailwind compatibility if needed, but portal.css is primary */
+/* @import "tailwindcss"; */
+
+:root {
+  /* These are already in portal.css, but we can override or ensure they are here */
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

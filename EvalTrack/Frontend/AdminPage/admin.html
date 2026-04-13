@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack — Admin / Dean Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" type="image/png" href="../icon&logo/logo.png">
+</head>
+<body>
+<canvas id="particles"></canvas>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img class="sidebar-logo-img" src="../icon&logo/logo.png" alt="JMC">
+    <div>
+      <div class="sidebar-brand">EvalTrack</div>
+      <div class="sidebar-brand-sub">Dean / Admin Portal</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-link active" data-sec="dashboard"><span class="ni"><i class="fa fa-house"></i></span><span>Dashboard</span></button>
+    <button class="nav-link" data-sec="users"><span class="ni"><i class="fa fa-users"></i></span><span>User Administration</span></button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Academic</div>
+    <button class="nav-link" data-sec="reports"><span class="ni"><i class="fa fa-chart-bar"></i></span><span>Academic Reports</span></button>
+    <button class="nav-link" data-sec="messages"><span class="ni"><i class="fa fa-comments"></i></span><span>Program Head Comms</span></button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">System</div>
+    <button class="nav-link" data-sec="system"><span class="ni"><i class="fa fa-server"></i></span><span>System Admin</span></button>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-user-card">
+      <div class="user-avatar" id="user-avatar">A</div>
+      <div style="overflow:hidden;flex:1;">
+        <div class="user-name" id="sidebar-name">Loading...</div>
+        <div class="user-role">Dean / Administrator</div>
+      </div>
+    </div>
+    <button class="btn-signout" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Sign Out</button>
+  </div>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="mob-toggle" id="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="topbar-breadcrumb">
+      <span class="topbar-crumb"><i class="fa fa-school"></i> JMC</span>
+      <i class="fa fa-chevron-right" style="font-size:9px;color:var(--g300);"></i>
+      <span class="topbar-page" id="topbar-title">Dashboard</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="tb-pill">
+      <span class="status-dot"></span>
+      <span id="tb-user-name">Loading</span>
+    </div>
+    <div class="tb-time" id="tb-clock"></div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="main-wrap">
+
+  <!-- ── 1. DASHBOARD ── -->
+  <section id="dashboard" class="section active">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Admin Dashboard</div>
+        <div class="ph-sub">System overview and administrative controls</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon si-blue"><i class="fa fa-users"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" id="total-users">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-green"><i class="fa fa-graduation-cap"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" id="total-students">0</div>
+          <div class="stat-label">Students</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-purple"><i class="fa fa-chalkboard-user"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" id="total-instructors">0</div>
+          <div class="stat-label">Instructors</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-amber"><i class="fa fa-chart-line"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" id="total-evaluations">0</div>
+          <div class="stat-label">Evaluations</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title"><i class="fa fa-cog"></i> Quick Actions</div>
+          <div class="card-sub">Administrative shortcuts</div>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="btn btn-primary" onclick="document.querySelector('[data-sec=users]').click()">
+          <i class="fa fa-user-plus"></i> Add User
+        </button>
+        <button class="btn btn-success" onclick="generateReports()">
+          <i class="fa fa-file-export"></i> Generate Reports
+        </button>
+        <button class="btn btn-warning" onclick="openSystemSettings()">
+          <i class="fa fa-sliders"></i> System Settings
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. USER ADMINISTRATION ── -->
+  <section id="users" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">User Administration</div>
+        <div class="ph-sub">Manage users, roles, and permissions</div>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-primary" onclick="showAddUserModal()">
+          <i class="fa fa-plus"></i> Add User
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Program</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i> Loading users...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. ACADEMIC REPORTS ── -->
+  <section id="reports" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Academic Reports</div>
+        <div class="ph-sub">System-wide academic performance analytics</div>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-success" onclick="exportReports()">
+          <i class="fa fa-download"></i> Export All
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title"><i class="fa fa-chart-bar"></i> Performance Overview</div>
+          <div class="card-sub">Key metrics and analytics</div>
+        </div>
+      </div>
+      <div id="reports-content">
+        <div style="text-align:center;padding:3rem;color:var(--g400);">
+          <i class="fa fa-chart-line fa-3x"></i>
+          <p style="margin-top:1rem;">Reports will be displayed here</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. MESSAGES ── -->
+  <section id="messages" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Program Head Communications</div>
+        <div class="ph-sub">Messages and announcements</div>
+      </div>
+    </div>
+    <div id="advanced-chat-container"></div>
+  </section>
+
+  <!-- ── 5. SYSTEM ADMIN ── -->
+  <section id="system" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">System Administration</div>
+        <div class="ph-sub">System settings and maintenance</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title"><i class="fa fa-server"></i> System Status</div>
+          <div class="card-sub">Current system health and performance</div>
+        </div>
+      </div>
+      <div class="system-status">
+        <div class="status-item">
+          <div class="status-indicator online"></div>
+          <div class="status-text">Database Connection</div>
+        </div>
+        <div class="status-item">
+          <div class="status-indicator online"></div>
+          <div class="status-text">API Server</div>
+        </div>
+        <div class="status-item">
+          <div class="status-indicator online"></div>
+          <div class="status-text">File Storage</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast-container"></div>
+
+<!-- Add User Modal -->
+<div class="modal" id="add-user-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Add New User</h3>
+      <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="add-user-form">
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" id="new-user-id" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="new-user-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="new-user-email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="new-user-password" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="new-user-role" class="form-control" required>
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="instructor">Instructor</option>
+            <option value="student">Student</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Program</label>
+          <select id="new-user-program" class="form-control">
+            <option value="BSIT">BSIT</option>
+            <option value="BSEMC">BSEMC</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeAddUserModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addUser()">Add User</button>
+    </div>
+  </div>
+</div>
+
+<script src="../app.js"></script>
+<script>
+/* ═══════ Admin Portal Controller ═══════ */
+
+/* ═══════ Auth & Storage Helper ═══════ */
+function getAuthToken() {
+  return localStorage.getItem('authToken') || localStorage.getItem('token') || sessionStorage.getItem('authToken') || sessionStorage.getItem('token') || null;
+}
+
+function getCurrentUser() {
+  const userStr = localStorage.getItem('currentUser') || localStorage.getItem('user') || sessionStorage.getItem('user') || sessionStorage.getItem('currentUser');
+  if (!userStr) return null;
+  try { return JSON.parse(userStr); } catch (e) { return null; }
+}
+
+async function authFetch(url, options = {}) {
+  const token = getAuthToken();
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  
+  const response = await fetch(url, { ...options, headers });
+  if (response.status === 401) {
+    localStorage.clear(); sessionStorage.clear();
+    window.location.href = '../LoginPage/login.html';
+    throw new Error('Unauthorized');
+  }
+  return response;
+}
+
+function logout() {
+  localStorage.clear(); sessionStorage.clear();
+  window.location.href = '../LoginPage/login.html';
+}
+
+function checkAuth(allowedRoles) {
+  const user = getCurrentUser();
+  if (!user) { window.location.href = '../LoginPage/login.html'; return null; }
+  
+  const userRole = (user.role || '').toString().toLowerCase().replace(/[\s\-_]/g, '');
+  if (allowedRoles) {
+    const normalizedRoles = allowedRoles.map(r => r.toString().toLowerCase().replace(/[\s\-_]/g, ''));
+    if (!normalizedRoles.includes(userRole)) {
+      window.location.href = '../LoginPage/login.html';
+      return null;
+    }
+  }
+  return user;
+}
+
+const PAGE_TITLES = {
+  dashboard: 'Dashboard', users: 'User Administration',
+  reports: 'Academic Reports', messages: 'Program Head Comms', system: 'System Admin'
+};
+
+// Clock
+function startClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('tb-clock').textContent = now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+// Navigation
+document.querySelectorAll('.nav-link[data-sec]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sec = btn.dataset.sec;
+    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(sec)?.classList.add('active');
+    document.getElementById('topbar-title').textContent = PAGE_TITLES[sec] || sec;
+    if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+    
+    // Load section-specific data
+    if (sec === 'dashboard') loadDashboardStats();
+    if (sec === 'users') loadUsers();
+    if (sec === 'reports') loadReports();
+  });
+});
+
+// Load dashboard stats
+async function loadDashboardStats() {
+  try {
+    // Load users
+    const usersRes = await authFetch('http://localhost:3000/api/auth/users');
+    const users = await usersRes.json();
+    
+    if (Array.isArray(users)) {
+      document.getElementById('total-users').textContent = users.length;
+      document.getElementById('total-students').textContent = users.filter(u => u.role === 'student').length;
+      document.getElementById('total-instructors').textContent = users.filter(u => u.role === 'instructor').length;
+    }
+    
+    // Load evaluations
+    const evalsRes = await authFetch('http://localhost:3000/api/evaluations');
+    const evaluations = await evalsRes.json();
+    
+    if (Array.isArray(evaluations)) {
+      document.getElementById('total-evaluations').textContent = evaluations.length;
+    }
+  } catch (error) {
+    console.error('Error loading dashboard stats:', error);
+  }
+}
+
+// Load users - handles PHP-style array response
+async function loadUsers() {
+  try {
+    const response = await authFetch('http://localhost:3000/api/auth/users');
+    const users = await response.json();
+    
+    // Backend returns array directly (PHP-style), not {success, data} object
+    if (!Array.isArray(users)) {
+      throw new Error('Invalid response format from server');
+    }
+    
+    const tbody = document.getElementById('users-tbody');
+    tbody.innerHTML = '';
+    
+    users.forEach(user => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${user.id}</td>
+        <td><strong>${user.name}</strong></td>
+        <td>${user.email}</td>
+        <td><span class="badge bg-purple">${user.role}</span></td>
+        <td>${user.program || 'N/A'}</td>
+        <td><span class="badge ${user.status === 'Active' ? 'bg-green' : 'bg-red'}">${user.status}</span></td>
+        <td>
+          <button class="btn btn-sm btn-primary" onclick="editUser('${user.id}')">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}')">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    
+    // Update dashboard stats
+    document.getElementById('total-users').textContent = users.length;
+    document.getElementById('total-students').textContent = users.filter(u => u.role === 'student').length;
+    document.getElementById('total-instructors').textContent = users.filter(u => u.role === 'instructor').length;
+    
+  } catch (error) {
+    console.error('Error loading users:', error);
+    showToast('Failed to load users from backend', 'error');
+  }
+}
+
+// Load reports
+async function loadReports() {
+  try {
+    const API_BASE_URL = 'http://localhost:3000/api';
+    const response = await fetch(`${API_BASE_URL}/evaluations`);
+    const evaluations = await response.json();
+    
+    document.getElementById('total-evaluations').textContent = evaluations.length;
+    document.getElementById('reports-content').innerHTML = `
+      <div class="reports-grid">
+        <div class="report-card">
+          <h4>Total Evaluations</h4>
+          <div class="report-value">${evaluations.length}</div>
+        </div>
+        <div class="report-card">
+          <h4>Average Grade</h4>
+          <div class="report-value">${evaluations.length > 0 ? Math.round(evaluations.reduce((sum, e) => sum + parseFloat(e.grade || 0), 0) / evaluations.length) : 0}%</div>
+        </div>
+        <div class="report-card">
+          <h4>Pass Rate</h4>
+          <div class="report-value">${evaluations.length > 0 ? Math.round((evaluations.filter(e => parseFloat(e.grade || 0) >= 75).length / evaluations.length) * 100) : 0}%</div>
+        </div>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Error loading reports:', error);
+  }
+}
+
+// Modal functions
+function showAddUserModal() {
+  document.getElementById('add-user-modal').style.display = 'flex';
+}
+
+function closeAddUserModal() {
+  document.getElementById('add-user-modal').style.display = 'none';
+  document.getElementById('add-user-form').reset();
+}
+
+async function addUser() {
+  const userData = {
+    id: document.getElementById('new-user-id').value,
+    name: document.getElementById('new-user-name').value,
+    email: document.getElementById('new-user-email').value,
+    password: document.getElementById('new-user-password').value,
+    role: document.getElementById('new-user-role').value,
+    program: document.getElementById('new-user-program').value
+  };
+
+  try {
+    const response = await authFetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData)
+    });
+    
+    const result = await response.json();
+    if (result.success) {
+      showToast('User added successfully!', 'success');
+      closeAddUserModal();
+      loadUsers();
+    } else {
+      showToast(result.message || 'Failed to add user', 'error');
+    }
+  } catch (error) {
+    showToast('Connection error', 'error');
+  }
+}
+
+function editUser(userId) {
+  showToast('Edit functionality coming soon', 'info');
+}
+
+function deleteUser(userId) {
+  if (confirm('Are you sure you want to delete this user?')) {
+    showToast('Delete functionality coming soon', 'info');
+  }
+}
+
+function generateReports() {
+  showToast('Generating reports...', 'info');
+  loadReports();
+}
+
+function openSystemSettings() {
+  showToast('System settings coming soon', 'info');
+}
+
+function exportReports() {
+  showToast('Exporting reports...', 'info');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  startClock();
+  const user = checkAuth(['admin']);
+  if (!user) return;
+
+  document.getElementById('sidebar-name').textContent = user.name;
+  document.getElementById('tb-user-name').textContent = user.name;
+  document.getElementById('user-avatar').textContent = user.name?.charAt(0)?.toUpperCase() || 'A';
+
+  initAdvancedChat('advanced-chat-container', user);
+  loadDashboardStats();
+  loadUsers();
+});
+</script>
+</body>
+</html>

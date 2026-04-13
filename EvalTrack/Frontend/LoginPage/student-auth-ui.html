@@ -1,0 +1,160 @@
+<!--
+  STUDENT AUTH ENHANCEMENTS FOR login.html
+  
+  Add this inside the <div id="student-section" class="login-section"> element,
+  after the existing Google button (around line 159)
+-->
+
+<!-- Student Auth Toggle -->
+<div class="auth-toggle">
+  <button type="button" class="auth-toggle-btn active" onclick="switchStudentAuth('google')">
+    <i class="fab fa-google"></i> Google
+  </button>
+  <button type="button" class="auth-toggle-btn" onclick="switchStudentAuth('email')">
+    <i class="fa fa-envelope"></i> Email
+  </button>
+</div>
+
+<!-- Google Auth Section -->
+<div id="student-google-section" class="email-auth-section">
+  <button type="button" class="google-btn" onclick="signInWithGoogle()">
+    <svg class="google-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>
+    Sign in with Google
+  </button>
+</div>
+
+<!-- Email Auth Section (Hidden by default) -->
+<div id="student-email-section" class="email-auth-section" style="display: none;">
+  <form id="studentLoginForm" class="login-form">
+    <div class="form-group">
+      <label for="student-auth-email">Email</label>
+      <div class="input-wrapper">
+        <i class="fa fa-envelope input-icon"></i>
+        <input type="email" id="student-auth-email" placeholder="your.email@jmc.edu.ph" required>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="student-auth-password">Password</label>
+      <div class="input-wrapper">
+        <i class="fa fa-lock input-icon"></i>
+        <input type="password" id="student-auth-password" placeholder="Enter your password" required>
+        <button type="button" class="password-toggle" onclick="togglePassword('student-auth-password', 'student-toggleIcon')">
+          <i class="fa fa-eye" id="student-toggleIcon"></i>
+        </button>
+      </div>
+    </div>
+    
+    <button type="submit" class="login-btn">
+      <i class="fa fa-sign-in-alt"></i>
+      Sign In
+    </button>
+    
+    <div class="forgot-password">
+      <a href="#" onclick="showForgotPasswordModal(); return false;">
+        <i class="fa fa-key"></i> Forgot your password?
+      </a>
+    </div>
+  </form>
+</div>
+
+<div class="divider">
+  <span>or</span>
+</div>
+
+<!-- Registration Link -->
+<div style="text-align: center;">
+  <p style="font-size: 13px; color: var(--g500); margin-bottom: 10px;">
+    New student? 
+    <a href="../RegisterPage/register.html" style="color: var(--p600); text-decoration: none; font-weight: 600;">
+      Create your account <i class="fa fa-arrow-right" style="font-size: 10px;"></i>
+    </a>
+  </p>
+</div>
+
+<!-- Link Account Modal -->
+<div id="linkAccountModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fa fa-link"></i>
+      <h3>Link Google Account</h3>
+      <p>An account already exists for <strong id="link-modal-email"></strong>. Would you like to link your Google sign-in to this existing account?</p>
+    </div>
+    
+    <div id="link-account-form">
+      <div class="form-group">
+        <label>Enter your existing account password to confirm:</label>
+        <div class="input-wrapper">
+          <i class="fa fa-lock input-icon"></i>
+          <input type="password" id="link-account-password" placeholder="Current password">
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="modal-btn modal-btn-primary" onclick="confirmLinkAccount()">
+          <i class="fa fa-check"></i> Link Accounts
+        </button>
+        <button type="button" class="modal-btn modal-btn-secondary" onclick="sendVerificationEmail()">
+          <i class="fa fa-envelope"></i> Verify by Email Instead
+        </button>
+        <button type="button" class="modal-btn modal-btn-secondary" onclick="closeLinkModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+    
+    <div id="link-success" style="display: none; text-align: center;">
+      <div class="success-check">
+        <i class="fa fa-check"></i>
+      </div>
+      <h4 style="color: #10b981; margin-bottom: 8px;">Accounts Linked!</h4>
+      <p style="font-size: 13px; color: var(--g500);">You can now sign in with either Google or your email and password.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div id="forgotPasswordModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fa fa-key"></i>
+      <h3>Reset Your Password</h3>
+      <p>Enter your email address and we'll send you a link to reset your password.</p>
+    </div>
+    
+    <form id="forgotPasswordForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-wrapper">
+          <i class="fa fa-envelope input-icon"></i>
+          <input type="email" id="forgot-email" placeholder="your.email@jmc.edu.ph" required>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="submit" class="modal-btn modal-btn-primary">
+          <i class="fa fa-paper-plane"></i> Send Reset Link
+        </button>
+        <button type="button" class="modal-btn modal-btn-secondary" onclick="closeForgotModal()">
+          Cancel
+        </button>
+      </div>
+    </form>
+    
+    <div id="forgot-success" style="display: none; text-align: center;">
+      <div class="success-check">
+        <i class="fa fa-envelope"></i>
+      </div>
+      <h4 style="color: #10b981; margin-bottom: 8px;">Check Your Email!</h4>
+      <p style="font-size: 13px; color: var(--g500);">We've sent a password reset link to your email address.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Add this to <head> section of login.html -->
+<link rel="stylesheet" href="auth-enhancements.css">

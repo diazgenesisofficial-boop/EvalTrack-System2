@@ -1,0 +1,135 @@
+/* Premium Glassmorphism Theme
+   - Use non-destructively: link after existing CSS files to override visuals
+   - Design-focused only: does not change markup or JS behaviour
+*/
+
+/* -----------------------
+   Color palette & spacing
+   ----------------------- */
+:root{
+  --bg-dark-1: #07040b;    /* near-black */
+  --bg-dark-2: #12061a;    /* deep navy purple */
+  --bg-dark-3: #1b0f33;    /* charcoal purple */
+
+  --accent-1: #9b5cff;     /* vivid purple */
+  --accent-2: #7c3aed;     /* deep purple */
+  --accent-3: #a78bfa;     /* light purple */
+
+  --glass-white: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-inner: rgba(0,0,0,0.25);
+
+  --text-high: #F4EDFF;
+  --text-muted: #cbbcff;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+}
+
+/* -----------------------
+   Background & particles layer
+   ----------------------- */
+html,body{
+  height:100%;
+  background:
+    radial-gradient(900px 420px at 6% 12%, rgba(155,92,255,0.06), transparent 8%),
+    radial-gradient(800px 420px at 92% 86%, rgba(124,58,237,0.05), transparent 10%),
+    linear-gradient(180deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 40%, var(--bg-dark-3) 100%);
+  color: var(--text-high);
+  font-family: 'Poppins', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* container for particle canvas should be z-index below UI */
+.particles-canvas{ position: fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* -----------------------
+   Global glass panels
+   ----------------------- */
+.glass-panel, .login-card, .card, .sidebar, .modal-content, .right-side, .left-side{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px rgba(8,4,18,0.6);
+  backdrop-filter: blur(22px) saturate(120%);
+  -webkit-backdrop-filter: blur(22px) saturate(120%);
+}
+
+/* inner soft shadow for depth */
+.glass-panel::after{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  box-shadow: inset 0 2px 30px rgba(0,0,0,0.35);
+  pointer-events:none; z-index:0;
+}
+
+/* ensure existing content stays above panel overlays */
+.glass-panel > *{ position:relative; z-index:2; }
+
+/* reflection sheen */
+.glass-shine{ position:relative; overflow:hidden; }
+.glass-shine::before{
+  content:''; position:absolute; left:-60%; top:-40%; width:60%; height:180%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+  transform: rotate(-18deg); transition: transform .9s cubic-bezier(.2,.9,.2,1), opacity .9s;
+  pointer-events:none; z-index:1;
+}
+.glass-shine:hover::before{ transform: translateX(160%) rotate(-18deg); opacity:1; }
+
+/* -----------------------
+   Buttons & inputs (glass style)
+   ----------------------- */
+.input-wrapper, input[type='text'], input[type='email'], input[type='password'], select{
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-high);
+  border-radius: 12px; padding: 12px 14px; height:48px;
+  transition: box-shadow .18s, transform .14s, border-color .18s;
+}
+.input-wrapper:focus-within, input:focus, select:focus{ border-color: rgba(155,92,255,0.36); box-shadow: 0 6px 28px rgba(155,92,255,0.08); outline: none; }
+
+.btn, .login-btn, .google-btn{
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: white; border: none; border-radius: 12px; padding: 12px 18px; cursor:pointer;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.btn:hover, .login-btn:hover{ transform: translateY(-4px); box-shadow: 0 18px 48px rgba(124,58,237,0.18); }
+
+.ghost-btn{ background: transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text-high); }
+
+/* icon inside inputs */
+.input-icon{ color: var(--text-muted); margin-right:10px; }
+
+/* -----------------------
+   Card hover & movement
+   ----------------------- */
+.card, .login-card{ transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s; }
+.card:hover{ transform: translateY(-10px); box-shadow: 0 36px 100px rgba(8,4,18,0.7); }
+
+/* -----------------------
+   Toasts
+   ----------------------- */
+#toast-container{ position: fixed; top: 20px; right: 20px; z-index:99999; }
+.toast-item{ background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.06); padding:12px 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(8,4,18,0.6); }
+.toast-item.success{ border-left:4px solid #10b981; }
+.toast-item.error{ border-left:4px solid #ef4444; }
+
+/* -----------------------
+   Cracked glass subtle overlay (SVG data-uri)
+   Very low opacity so it's purely decorative
+*/
+.cracked-overlay{ pointer-events:none; position: absolute; inset:0; z-index:3; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><g opacity="0.04"><path d="M150 300 L450 300" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></g></svg>'); background-repeat:no-repeat; background-position:center; }
+
+/* -----------------------
+   Responsive adjustments
+   ----------------------- */
+@media (max-width: 900px){
+  .login-card{ border-radius: 14px; }
+  .glass-shine::before{ display:none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .glass-shine::before, body::after, .card:hover, .login-card:hover{ animation: none; transition: none; transform:none; }
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack - Login</title>
+  <link rel="icon" type="image/png" href="../icon&logo/logo.png">
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .role-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .role-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--g200);
+      background: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .role-btn:hover {
+      border-color: var(--p500);
+    }
+    .role-btn.active {
+      background: var(--p600);
+      color: white;
+      border-color: var(--p600);
+    }
+    .login-section {
+      display: none;
+    }
+    .login-section.active {
+      display: block;
+    }
+    .google-btn {
+      width: 100%;
+      height: 54px;
+      background-color: #ffffff;
+      color: #3c4043;
+      border: 1px solid #dadce0;
+      border-radius: 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .google-btn:hover {
+      background-color: #f8f9fa;
+      border-color: #d2d4d7;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .role-info {
+      background: var(--p50);
+      border-left: 4px solid var(--p600);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: var(--p700);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Left Side (Branding) -->
+      <div class="left-side">
+        <img src="../icon&logo/logo.png" alt="EvalTrack Logo" class="login-logo">
+        <h1>Jose Maria College</h1>
+        <p>Foundation, Inc.</p>
+      </div>
+
+      <!-- Right Side (Form) -->
+      <div class="right-side">
+        <h1>User Login</h1>
+        <p>Access your academic portal securely</p>
+        
+        <!-- Role Selector -->
+        <div class="role-selector">
+          <button type="button" class="role-btn active" onclick="switchRole('faculty')">
+            <i class="fa fa-user-tie"></i> Faculty
+          </button>
+          <button type="button" class="role-btn" onclick="switchRole('student')">
+            <i class="fa fa-graduation-cap"></i> Student
+          </button>
+        </div>
+
+        <!-- Faculty Login Section -->
+        <div id="faculty-section" class="login-section active">
+          <div class="role-info">
+            <i class="fa fa-info-circle"></i> <strong>For Admin & Program Head only.</strong> Use your institutional credentials.
+          </div>
+          
+          <div id="faculty-error" class="error-message" style="display: none;">
+            <i class="fa fa-exclamation-triangle"></i>
+            <span id="faculty-error-text"></span>
+          </div>
+          
+          <form id="facultyLoginForm" class="login-form">
+            <div class="form-group">
+              <label for="faculty-email">Email or ID</label>
+              <div class="input-wrapper">
+                <i class="fa fa-user input-icon"></i>
+                <input type="text" id="faculty-email" placeholder="Enter email or admin ID" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="faculty-password">Password</label>
+              <div class="input-wrapper">
+                <i class="fa fa-lock input-icon"></i>
+                <input type="password" id="faculty-password" placeholder="Enter your password" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('faculty-password', 'faculty-toggleIcon')">
+                  <i class="fa fa-eye" id="faculty-toggleIcon"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button type="submit" class="login-btn">
+              <i class="fa fa-sign-in-alt"></i>
+              Login
+            </button>
+          </form>
+        </div>
+
+        <!-- Student Login Section -->
+        <div id="student-section" class="login-section">
+          <div class="role-info">
+            <i class="fa fa-info-circle"></i> <strong>For Students only.</strong> Sign in with your Google account.
+          </div>
+          
+          <div id="student-error" class="error-message" style="display: none;">
+            <i class="fa fa-exclamation-triangle"></i>
+            <span id="student-error-text"></span>
+          </div>
+
+          <button type="button" class="google-btn" onclick="signInWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
+          </button>
+
+          <div style="margin-top: 20px; text-align: center;">
+            <p style="font-size: 13px; color: var(--g500); margin-bottom: 10px;">
+              New student? <a href="../RegisterPage/register.html" style="color: var(--p600); text-decoration: none;">Complete your profile here</a>
+            </p>
+          </div>
+        </div>
+
+      </div> <!-- right-side -->
+    </div> <!-- login-card -->
+  </div> <!-- login-container -->
+  
+  <div id="toast-container"></div>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script>
+    // Firebase Configuration
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyA90M1tOW7qIjy3-odQaSyR4a6xcTlPObU",
+      authDomain: "evaltrack-system.firebaseapp.com",
+      projectId: "evaltrack-system",
+      storageBucket: "evaltrack-system.firebasestorage.app",
+      messagingSenderId: "407757043757",
+      appId: "1:407757043757:web:e8aef13e040c2777ba20a4"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    console.log('Firebase initialized successfully');
+  </script>
+  <script>
+    // Role Switcher
+    function switchRole(role) {
+      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.login-section').forEach(sec => sec.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(role + '-section').classList.add('active');
+    }
+
+    // Password toggle
+    function togglePassword(inputId, iconId) {
+      const passwordInput = document.getElementById(inputId);
+      const toggleIcon = document.getElementById(iconId);
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fa fa-eye-slash';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fa fa-eye';
+      }
+    }
+
+    // Faculty Login Handler
+    document.getElementById('facultyLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('faculty-email').value;
+      const password = document.getElementById('faculty-password').value;
+      const submitBtn = e.target.querySelector('.login-btn');
+      const originalText = submitBtn.innerHTML;
+      
+      hideError('faculty');
+      submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Logging in...';
+      submitBtn.disabled = true;
+      
+      try {
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+          sessionStorage.setItem('token', data.token);
+          
+          showToast('Login successful! Redirecting...', 'success');
+          
+          setTimeout(() => {
+            if (data.user.role === 'admin') {
+              window.location.href = '../AdminPage/admin.html';
+            } else if (data.user.role === 'programhead' || data.user.role === 'instructor') {
+              window.location.href = '../ProgramHeadPage/ProgramHead.html';
+            } else if (data.user.role === 'student') {
+              window.location.href = '../StudentPage/student.html';
+            } else {
+              window.location.href = '../LoginPage/login.html';
+            }
+          }, 1000);
+        } else {
+          showError('faculty', data.message || 'Invalid credentials');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('faculty', 'Connection error. Please try again.');
+      } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Google Sign In for Students
+    async function signInWithGoogle() {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email');
+        provider.addScope('profile');
+
+        const result = await firebase.auth().signInWithPopup(provider);
+        const user = result.user;
+        if (!user || !user.email) {
+          throw new Error('Google account did not return an email address.');
+        }
+
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, isGoogleLogin: true })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+          sessionStorage.setItem('token', data.token || '');
+          showToast('Login successful! Redirecting...', 'success');
+          setTimeout(() => {
+            if (data.user.role === 'admin') {
+              window.location.href = '../AdminPage/admin.html';
+            } else if (data.user.role === 'programhead' || data.user.role === 'instructor') {
+              window.location.href = '../ProgramHeadPage/ProgramHead.html';
+            } else if (data.user.role === 'student') {
+              window.location.href = '../StudentPage/student.html';
+            } else {
+              window.location.href = '../LoginPage/login.html';
+            }
+          }, 800);
+          return;
+        }
+
+        sessionStorage.setItem('tempGoogleUser', JSON.stringify({
+          email: user.email,
+          name: user.displayName || '',
+          uid: user.uid,
+          photoURL: user.photoURL || ''
+        }));
+        showToast('Google sign-in successful. Complete your student profile now.', 'info');
+        window.location.href = '../RegisterPage/register.html';
+      } catch (error) {
+        console.error('Google Sign In error:', error);
+        showError('student', 'Google Sign In failed: ' + (error.message || 'Please try again.'));
+      }
+    }
+
+    // Error handling
+    function showError(section, message) {
+      document.getElementById(section + '-error-text').textContent = message;
+      document.getElementById(section + '-error').style.display = 'flex';
+    }
+
+    function hideError(section) {
+      document.getElementById(section + '-error').style.display = 'none';
+    }
+
+    // Toast notifications
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast-item ${type}`;
+      toast.innerHTML = `<i class="fa fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

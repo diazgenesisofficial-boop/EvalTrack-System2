@@ -1,0 +1,12 @@
+{
+  "short_name": "EvalTrack",
+  "name": "EvalTrack - Jose Maria College",
+  "icons": [
+    { "src": "icon&logo/logo.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "icon&logo/logo.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7c3aed"
+}

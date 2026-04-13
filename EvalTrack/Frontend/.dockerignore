@@ -1,0 +1,32 @@
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+firebase-debug.log*
+
+# Documentation
+*.md
+DESIGN-USAGE.md
+
+# Deployment reports (not needed for serving)
+Deployment_Report.html
+Deployment_Report.md
+
+# Netlify config (not needed in Docker)
+netlify.toml
+
+# OS files
+*.tmp
+*.temp
