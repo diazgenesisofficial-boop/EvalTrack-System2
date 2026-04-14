@@ -1,12 +1,22 @@
-// Load environment variables - try dotenvx first, fall back to regular dotenv
-try {
-  require('@dotenvx/dotenvx').config();
-} catch (e) {
-  require('dotenv').config();
+// Load environment variables
+const fs = require('fs');
+const path = require('path');
+
+// Only load dotenvx if .env file exists (local development)
+// On Render, env vars are injected automatically
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    require('@dotenvx/dotenvx').config();
+  } catch (e) {
+    require('dotenv').config();
+  }
+} else {
+  // On Render or production, env vars are already set
+  console.log('No .env file found, using system environment variables');
 }
 const express = require('express');
 const mysql = require('mysql2');
-const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
