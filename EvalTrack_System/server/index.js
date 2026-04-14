@@ -81,8 +81,6 @@ async function requestGroq(messages, options = {}) {
 
 console.log(`✓ Groq AI initialized with ${GROQ_API_KEYS.length} API keys`);
 
-const fs = require('fs');
-
 // Firebase Admin SDK - New Project Configuration
 let firebaseAdmin, firebaseInitialized;
 
